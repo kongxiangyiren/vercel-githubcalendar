@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const axios = require('axios');
 const https = require('https');
 const cheerio = require('cheerio');
+const dayjs = require('dayjs');
 const config = require('../../config/config');
 
 router.prefix('/api');
@@ -51,32 +52,39 @@ async function getdata(name) {
   //   console.log(res);
   const $ = cheerio.load(res);
   const data = $(
-    '#user-profile-frame > div > div.mt-4.position-relative > div.js-yearly-contributions > div > div > div > svg > g > g'
+    '#user-profile-frame > div > div.mt-4.position-relative > div.js-yearly-contributions > div > div > div > div:nth-child(1)  table > tbody > tr'
   );
-
   let contributions = [];
   let total = 0;
   for (let i = 0; i < data.length; i++) {
-    const data2 = $(data[i]).children('rect');
+    const data2 = $(data[i]).children('td');
     for (let j = 0; j < data2.length; j++) {
-      //   console.log($(data2[j]).attr('data-date'));
+      // console.log($(data2[j]).attr('data-date'));
       //   console.log($(data2[j]).attr('data-level'));
 
       let count = $(data2[j])
         .text()
         .replace(/^(.*) contribution(.*)$/, '$1');
       count = count === 'No' ? 0 : Number(count);
-      total += count;
-      contributions.push({
-        date: $(data2[j]).attr('data-date'),
-        count: count
-      });
+
+      if (!isNaN(count) && $(data2[j]).attr('data-date')) {
+        total += count;
+        contributions.push({
+          date: $(data2[j]).attr('data-date'),
+          count: count
+        });
+      }
     }
   }
+  const sortedData = contributions.sort((a, b) => {
+    const dateA = dayjs(a.date);
+    const dateB = dayjs(b.date);
+    return dateA - dateB;
+  });
 
   return {
     total: total,
-    contributions: list_split(contributions, 7),
+    contributions: list_split(sortedData, 7),
     code: 200,
     message: 'ok'
   };

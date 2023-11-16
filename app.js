@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const app = new Koa();
 const cors = require('@koa/cors');
-const views = require('koa-views');
+const views = require('@ladjs/koa-views');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
@@ -10,7 +10,7 @@ const helmet = require('koa-helmet');
 const compress = require('koa-compress');
 const config = require('./config/config');
 const nunjucks = require('nunjucks');
-const LRU = require('lru-cache');
+const { LRUCache: LRU } = require('lru-cache');
 
 const index = require('./routes/index');
 const githubcalendar = require('./routes/api/githubcalendar');

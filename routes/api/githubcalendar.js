@@ -61,18 +61,20 @@ async function getdata(name) {
     for (let j = 0; j < data2.length; j++) {
       // console.log($(data2[j]).attr('data-date'));
       //   console.log($(data2[j]).attr('data-level'));
+      const githubcalendarId = $(data2[j]).attr('id');
+      if (githubcalendarId) {
+        let count = $(`tool-tip[for="${githubcalendarId}"]`)
+          .text()
+          .replace(/^(.*) contribution(.*)$/, '$1');
+        count = count === 'No' ? 0 : Number(count);
 
-      let count = $(data2[j])
-        .text()
-        .replace(/^(.*) contribution(.*)$/, '$1');
-      count = count === 'No' ? 0 : Number(count);
-
-      if (!isNaN(count) && $(data2[j]).attr('data-date')) {
-        total += count;
-        contributions.push({
-          date: $(data2[j]).attr('data-date'),
-          count: count
-        });
+        if (!isNaN(count) && $(data2[j]).attr('data-date')) {
+          total += count;
+          contributions.push({
+            date: $(data2[j]).attr('data-date'),
+            count: count
+          });
+        }
       }
     }
   }

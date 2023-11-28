@@ -4,14 +4,13 @@ apps:
       - ./**/*.js
     ignore_watch: # 排除监听文件
       - node_modules
-      - node-ip2region
       - public
     watch_delay: 1000 # 指定延迟时间
     min_uptime: 10000 # pm2认为进程在线的最小时长
     max_restarts: 3 # 最大不稳定重启次数（不稳定指的是小于1s或者小于的min_uptime重启）
     watch_options:
       followSymlinks: false
-    name: vercel-test # pm2项目名称
+    name: vercel-githubcalendar # pm2项目名称
     script: ./bin/www # 启动文件入口
     error_file: ./pm2/error.log # pm2输出错误信息日志
     out_file: ./pm2/out.log # pm2输出输出日志
